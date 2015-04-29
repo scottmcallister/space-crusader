@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetKey (KeyCode.Space) && Time.time > nextFire) {
 			nextFire = Time.time + fireRate;
 			Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
-			audio.Play ();
+			GetComponent<AudioSource>().Play ();
 		}
 
 		/* 
@@ -67,10 +67,10 @@ public class PlayerController : MonoBehaviour {
 		
 		Vector2 movement = new Vector2 (moveHorizontal, 0.0f); 
 		
-		rigidbody2D.velocity = movement * moveSpeed;
+		GetComponent<Rigidbody2D>().velocity = movement * moveSpeed;
 		
-		rigidbody2D.position = new Vector2 (
-			Mathf.Clamp(rigidbody2D.position.x,boundary.xMin, boundary.xMax), 
+		GetComponent<Rigidbody2D>().position = new Vector2 (
+			Mathf.Clamp(GetComponent<Rigidbody2D>().position.x,boundary.xMin, boundary.xMax), 
 			-20.0f);
 	}
 	

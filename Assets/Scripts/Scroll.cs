@@ -14,6 +14,6 @@ public class Scroll : MonoBehaviour {
 	void Update () {
 		Vector2 offset = new Vector2 (0.0f, Time.time * speed);
 
-		renderer.material.mainTextureOffset = offset;
+		GetComponent<Renderer>().material.mainTextureOffset = offset;
 	}
 }
