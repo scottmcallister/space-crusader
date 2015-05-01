@@ -10,7 +10,10 @@ public class GameController : MonoBehaviour {
 	public int score;
 	public GUIText scoreText;
 	public GUIText pausedText;
+	public GUIText gameOverText;
+	public GUIText restartText;
 	public float savedTimeScale;
+	public int enemyCount;
 
 	private bool gameOver;
 	private bool restart;
@@ -24,6 +27,8 @@ public class GameController : MonoBehaviour {
 		paused = false;
 		score = 0;
 		pausedText.text = "";
+		gameOverText.text = "";
+		restartText.text = "";
 		UpdateScore();
 		StartCoroutine (SpawnWaves());
 	}
@@ -34,22 +39,46 @@ public class GameController : MonoBehaviour {
 			TogglePaused();
 			
 		}
+
+		if (restart) {
+			if(Input.GetKeyDown(KeyCode.R)){
+				Application.LoadLevel(Application.loadedLevel);
+			}
+		}
 	}
 
 	// Coroutine that spawns asteroids
 	IEnumerator SpawnWaves (){
 		yield return new WaitForSeconds (startWait);
 		while (true) {
-			Vector2 spawnPosition = new Vector2 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y);
-			Quaternion spawnRotation = Quaternion.identity;
-			Instantiate (hazard, spawnPosition, spawnRotation);
+			if(score % 5 == 0){
+				for(int i = 0; i < 5; i++){
+					Vector2 spawnPosition = new Vector2 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y + (i * -5));
+					Quaternion spawnRotation = Quaternion.identity;
+					Instantiate (hazard, spawnPosition, spawnRotation);
+					enemyCount++;
+					yield return new WaitForSeconds (spawnWait);
+				}
+			}
+
 			yield return new WaitForSeconds (spawnWait);
+
+			if(gameOver){
+				yield return new WaitForSeconds (3);
+				restartText.text = "Press 'R' to restart";
+				restart = true;
+				break;
+			}
 		}
 	}
 
 	public void AddScore(int scoreValue){
 		score += scoreValue;	
 		UpdateScore ();
+	}
+
+	public void KillEnemy(){
+		enemyCount -= 1;
 	}
 
 	void UpdateScore(){
@@ -74,4 +103,10 @@ public class GameController : MonoBehaviour {
 		}
 
 	}
+
+	public void GameOver(){
+		gameOverText.text = "Game Over";
+		gameOver = true;
+
+	}	
 }

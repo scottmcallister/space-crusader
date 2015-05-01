@@ -19,6 +19,9 @@ public class DestroyByContact : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
+		if (other.tag == "Lazer" && tag == "Projectile") {
+			return;
+		}
 		Debug.Log ("other tag: " + other.tag);
 		if (other.tag == "Boundary") {
 			return;
@@ -26,7 +29,10 @@ public class DestroyByContact : MonoBehaviour {
 		Instantiate(explosion, transform.position, transform.rotation);
 		if (other.tag == "Player") {
 			//Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
-			//gameController.GameOver();
+			gameController.GameOver();
+		}
+		if (other.tag == "Ghost") {
+			gameController.KillEnemy();
 		}
 		gameController.AddScore (scoreValue);
 		Destroy(other.gameObject);
