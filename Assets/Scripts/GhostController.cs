@@ -84,9 +84,9 @@ public class GhostController : MonoBehaviour {
 		}
 	}
 
-	void OnCollsionEnter(Collision collision){
-		if (collision.gameObject.tag == "Projectile") {
-			Physics.IgnoreCollision(collision.collider, collider);
-		}
+	void OnCollisionEnter(Collision collision){
+		/*if (collision.gameObject.tag == "Projectile") {
+			Physics.IgnoreCollision(collision, this);
+		}*/
 	}
 }

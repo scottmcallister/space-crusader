@@ -51,7 +51,7 @@ public class GameController : MonoBehaviour {
 	IEnumerator SpawnWaves (){
 		yield return new WaitForSeconds (startWait);
 		while (true) {
-			if(score % 5 == 0){
+			if(enemyCount == 0){
 				for(int i = 0; i < 5; i++){
 					Vector2 spawnPosition = new Vector2 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y + (i * -5));
 					Quaternion spawnRotation = Quaternion.identity;
@@ -79,6 +79,7 @@ public class GameController : MonoBehaviour {
 
 	public void KillEnemy(){
 		enemyCount -= 1;
+		Debug.Log ("Enemy count: " + enemyCount);
 	}
 
 	void UpdateScore(){
