@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour {
 	public GUIText pausedText;
 	public GUIText gameOverText;
 	public GUIText restartText;
+	public GUIText healthText;
 	public float savedTimeScale;
 	public int enemyCount;
 
@@ -52,16 +53,17 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds (startWait);
 		while (true) {
 			if(enemyCount == 0){
-				for(int i = 0; i < 5; i++){
-					Vector2 spawnPosition = new Vector2 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y + (i * -5));
+				for(int i = 1; i < 6; i++){
+					Vector2 spawnPosition = new Vector2 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y);
 					Quaternion spawnRotation = Quaternion.identity;
+					hazard.gameObject.GetComponent<FlightPath>().boundary.yMin = (i * 5.0f);
 					Instantiate (hazard, spawnPosition, spawnRotation);
 					enemyCount++;
 					yield return new WaitForSeconds (spawnWait);
 				}
 			}
 
-			yield return new WaitForSeconds (spawnWait);
+			yield return new WaitForSeconds(spawnWait);
 
 			if(gameOver){
 				yield return new WaitForSeconds (3);
@@ -79,11 +81,15 @@ public class GameController : MonoBehaviour {
 
 	public void KillEnemy(){
 		enemyCount -= 1;
-		Debug.Log ("Enemy count: " + enemyCount);
+		//Debug.Log ("Enemy count: " + enemyCount);
 	}
 
 	void UpdateScore(){
 		scoreText.text = "Score: " + score;
+	}
+
+	public void UpdateHealth (int newHealth){
+		healthText.text = newHealth + " x";
 	}
 
 	void TogglePaused(){

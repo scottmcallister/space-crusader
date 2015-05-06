@@ -4,7 +4,7 @@ using System.Collections;
 [System.Serializable]
 public class Boundary{
 	
-	public float xMin, xMax;
+	public float xMin, xMax, yMin, yMax;
 }
 
 public class PlayerController : MonoBehaviour {
@@ -18,11 +18,38 @@ public class PlayerController : MonoBehaviour {
 	public GameObject shot;
 	public Transform shotSpawn;
 	public float fireRate;
+	public float spinRate;
+	public float spinLength;
+	public bool spinning;
+	public int health;
+
 	private float nextFire;
+	private float nextSpin;
+	private float spinStop;
+	private float initFireRate;
+	private GameObject initShot;
+	private Animator animator;
+	private GameController gameController;
+
 
 	// Use this for initialization
 	void Start () {
-	
+		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
+		if (gameControllerObject != null) {
+			gameController = gameControllerObject.GetComponent <GameController>();
+		}
+		if (gameController == null) {
+			Debug.Log ("Cannot find game controller!");
+		}
+		gameController.UpdateHealth (health);
+
+		// store initial fire rate and shot to revert back to after power ups have worn out
+		initFireRate = fireRate;
+		initShot = shot;
+
+		// setup animations
+		animator = GetComponent<Animator> ();
+		animator.SetBool ("Spin", false);
 	}
 	
 	// Update is called once per frame
@@ -35,30 +62,17 @@ public class PlayerController : MonoBehaviour {
 			GetComponent<AudioSource>().Play ();
 		}
 
-		/* 
-		 * 	MOVEMENT
-		 *
-
-		// Move left
-		if (Input.GetKey (KeyCode.LeftArrow)) {
-			transform.Translate (Vector2.right * moveSpeed * Time.deltaTime * -1.0f);
+		if(Input.GetKey (KeyCode.F) && Time.time > nextSpin){
+			nextSpin = Time.time + spinRate;
+			spinStop = Time.time + spinLength;
+			animator.SetBool("Spin", true);
+			spinning = true;
+			// play audio sound
 		}
-
-		// Move right
-		else if (Input.GetKey (KeyCode.RightArrow)) {
-			transform.Translate (Vector2.right * moveSpeed * Time.deltaTime);
+		else if(Time.time > spinStop && animator.GetBool("Spin")){
+			animator.SetBool ("Spin", false);
+			spinning = false;
 		}
-
-		// Spin
-		else if (Input.GetKey (KeyCode.D)) {
-			GetComponent<SpriteRenderer>().sprite = spinSprite;
-		} */
-
-		else {
-			GetComponent<SpriteRenderer>().sprite = defaultSprite;
-		}
-
-
 	}
 
 	// FixedUpdate is used to update physics changes
@@ -68,10 +82,33 @@ public class PlayerController : MonoBehaviour {
 		Vector2 movement = new Vector2 (moveHorizontal, 0.0f); 
 		
 		GetComponent<Rigidbody2D>().velocity = movement * moveSpeed;
+
+		animator.SetFloat ("Speed", movement.x);
 		
 		GetComponent<Rigidbody2D>().position = new Vector2 (
 			Mathf.Clamp(GetComponent<Rigidbody2D>().position.x,boundary.xMin, boundary.xMax), 
 			-20.0f);
+	}
+
+	public IEnumerator PowerUp(PowerUpController powerUp){
+		fireRate = powerUp.fireRate;
+		shot = powerUp.shot;
+		yield return new WaitForSeconds (5);	
+		fireRate = initFireRate;
+		shot = initShot;
+	}
+
+	public void TakeHit(){
+		health --;
+		gameController.UpdateHealth (health);
+		if (health == 0)
+			Die ();
+	}
+
+	public void Die(){
+		gameController.GameOver ();
+		Destroy (gameObject);
+		return;
 	}
 	
 }

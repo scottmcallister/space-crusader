@@ -8,6 +8,7 @@ public class DestroyByContact : MonoBehaviour {
 	public int scoreValue;
 	private GameController gameController;
 
+
 	void Start(){
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
 		if (gameControllerObject != null) {
@@ -19,20 +20,35 @@ public class DestroyByContact : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		if (other.tag == "Lazer" && tag == "Projectile") {
-			return;
-		}
-		Debug.Log ("other tag: " + other.tag);
 		if (other.tag == "Boundary") {
 			return;
 		}
+		if (tag == "Ghost") {
+			GhostController controller = gameObject.GetComponent<GhostController>();
+			if(controller.IsHurt ()){
+				gameController.KillEnemy();
+				if(gameController.enemyCount == 0){
+					// Spawn wave cleared, initialize power up
+					GetComponent<GhostController>().SpawnPowerUp();
+				}
+			}
+			else{
+				Destroy(other.gameObject);
+				controller.HurtGhost ();
+				return;
+			}
+		}
 		Instantiate(explosion, transform.position, transform.rotation);
 		if (other.tag == "Player") {
-			//Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
-			gameController.GameOver();
-		}
-		if (tag == "Ghost") {
-			gameController.KillEnemy();
+			PlayerController pc = other.gameObject.GetComponent<PlayerController>();
+			if(pc.spinning){
+				Destroy(gameObject);
+				return;
+			}
+			else{
+				pc.TakeHit();
+				return;
+			}
 		}
 		gameController.AddScore (scoreValue);
 		Destroy(other.gameObject);
