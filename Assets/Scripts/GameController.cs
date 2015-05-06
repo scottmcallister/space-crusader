@@ -81,15 +81,14 @@ public class GameController : MonoBehaviour {
 
 	public void KillEnemy(){
 		enemyCount -= 1;
-		//Debug.Log ("Enemy count: " + enemyCount);
 	}
 
 	void UpdateScore(){
-		scoreText.text = "Score: " + score;
+		scoreText.text = "" + score;
 	}
 
 	public void UpdateHealth (int newHealth){
-		healthText.text = newHealth + " x";
+		healthText.text = newHealth + "";
 	}
 
 	void TogglePaused(){
