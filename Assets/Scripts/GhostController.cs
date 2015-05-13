@@ -62,6 +62,7 @@ public class GhostController : MonoBehaviour {
 	}
 
 	public void SpawnPowerUp(){
-		Instantiate(powerUps[0], shotSpawn.position, shotSpawn.rotation);
+		int randomIndex = Random.Range (0, 5);
+		Instantiate(powerUps[randomIndex], shotSpawn.position, shotSpawn.rotation);
 	}
 }

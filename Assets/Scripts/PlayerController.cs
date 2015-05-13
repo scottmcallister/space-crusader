@@ -56,13 +56,13 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 
 		// Shoot
-		if (Input.GetKey (KeyCode.Space) && Time.time > nextFire) {
+		if (Time.time > nextFire) {
 			nextFire = Time.time + fireRate;
 			Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
 			GetComponent<AudioSource>().Play ();
 		}
 
-		if(Input.GetKey (KeyCode.F) && Time.time > nextSpin){
+		if(Input.GetKey (KeyCode.Space) && Time.time > nextSpin){
 			nextSpin = Time.time + spinRate;
 			spinStop = Time.time + spinLength;
 			animator.SetBool("Spin", true);
@@ -98,11 +98,23 @@ public class PlayerController : MonoBehaviour {
 		shot = initShot;
 	}
 
+	public IEnumerator Shrink(){
+		// shrink
+
+		yield return new WaitForSeconds (5);
+		// grow back
+	}
+
 	public void TakeHit(){
 		health --;
 		gameController.UpdateHealth (health);
 		if (health == 0)
 			Die ();
+	}
+
+	public void Heal(){
+		health++;
+		gameController.UpdateHealth (health);
 	}
 
 	public void Die(){

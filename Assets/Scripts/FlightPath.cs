@@ -49,7 +49,6 @@ public class FlightPath : MonoBehaviour {
 		} 
 		else if (direction == "Down") {
 			Rigidbody2D body = GetComponent<Rigidbody2D>();
-			Debug.Log ("Switching directions... Y position is " + body.position.y);
 			direction = "Left";
 		}
 		else{

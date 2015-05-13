@@ -7,22 +7,28 @@ public class GameController : MonoBehaviour {
 	public Vector2 spawnValues;
 	public float spawnWait;
 	public float startWait;
+	public float slowmoDuration;
 	public int score;
 	public GUIText scoreText;
 	public GUIText pausedText;
 	public GUIText gameOverText;
 	public GUIText restartText;
 	public GUIText healthText;
+	public GUIText highScoreText;
 	public float savedTimeScale;
+	public float slowmoTimeScale;
 	public int enemyCount;
 
 	private bool gameOver;
 	private bool restart;
 	private bool paused;
+	private bool slowmo;
 
 	// Use this for initialization
 	void Start () {
 		savedTimeScale = Time.timeScale;
+		slowmoTimeScale = savedTimeScale / 2;
+		slowmo = false;
 		gameOver = false;
 		restart = false;
 		paused = false;
@@ -30,6 +36,7 @@ public class GameController : MonoBehaviour {
 		pausedText.text = "";
 		gameOverText.text = "";
 		restartText.text = "";
+		highScoreText.text = "High Score " + PlayerPrefs.GetInt ("highscore");
 		UpdateScore();
 		StartCoroutine (SpawnWaves());
 	}
@@ -74,6 +81,15 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	// Coroutine that slows the game down
+	public IEnumerator SlowDown(){
+		slowmo = true;
+		Time.timeScale = slowmoTimeScale;
+		yield return new WaitForSeconds (slowmoDuration);
+		slowmo = false;
+		Time.timeScale = savedTimeScale;
+	}
+
 	public void AddScore(int scoreValue){
 		score += scoreValue;	
 		UpdateScore ();
@@ -94,7 +110,12 @@ public class GameController : MonoBehaviour {
 	void TogglePaused(){
 		if (paused) {
 			// resume play
-			Time.timeScale = savedTimeScale;
+			if(slowmo){
+				Time.timeScale = slowmoTimeScale;
+			}
+			else{
+				Time.timeScale = savedTimeScale;
+			}
 			AudioListener.pause = false;
 			pausedText.text = "";
 			paused = false;
@@ -113,6 +134,12 @@ public class GameController : MonoBehaviour {
 	public void GameOver(){
 		gameOverText.text = "Game Over";
 		gameOver = true;
+		StoreHighScore (score);
+	}
 
-	}	
+	void StoreHighScore(int newHighscore){
+		int oldHighScore = PlayerPrefs.GetInt ("highscore");
+		if(newHighscore > oldHighScore)
+			PlayerPrefs.SetInt("highscore", newHighscore);
+	}
 }

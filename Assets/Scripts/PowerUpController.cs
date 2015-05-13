@@ -4,7 +4,6 @@ using System.Collections;
 public class PowerUpController : MonoBehaviour {
 
 	public float fireRate;
-	public Sprite projectileImage;
 	public GameObject shot;
 
 	// Use this for initialization
