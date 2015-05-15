@@ -38,6 +38,14 @@ public class DestroyByContact : MonoBehaviour {
 				return;
 			}
 		}
+		if (tag == "Bee") {
+			Debug.Log ("Bee dies");
+			Instantiate(explosion, transform.position, transform.rotation);
+			//gameController.AddScore(scoreValue);
+			Destroy(other.gameObject);
+			Destroy (gameObject);
+			return;
+		}
 		Instantiate(explosion, transform.position, transform.rotation);
 		if (other.tag == "Player") {
 			PlayerController pc = other.gameObject.GetComponent<PlayerController>();

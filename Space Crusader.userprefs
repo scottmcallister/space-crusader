@@ -1,17 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/PlayerController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GhostController.cs">
     <Files>
-      <File FileName="Assets/Scripts/Mover.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/GhostController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/FlightPath.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/GameController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/DestroyByContact.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/PowerUpController.cs" Line="19" Column="2" />
-      <File FileName="Assets/Scripts/Scroll.cs" Line="1" Column="1" />
-      <File FileName="Assets/WaveResizer.cs" Line="58" Column="35" />
-      <File FileName="Assets/ShrinkController.cs" Line="19" Column="48" />
-      <File FileName="Assets/Scripts/PlayerController.cs" Line="101" Column="28" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
