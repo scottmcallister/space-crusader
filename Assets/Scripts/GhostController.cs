@@ -31,13 +31,14 @@ public class GhostController : MonoBehaviour {
 			RandomColor();
 		}
 		hurt = false;
+		projectile.GetComponent<Mover>().speed = -40.0f;
 	}
 
 	// Called every frame
 	void Update () {
 		if (Time.time > nextFire) {
 			nextFire = Time.time + fireRate;
-			Instantiate(projectile, shotSpawn.position, shotSpawn.rotation);
+			Instantiate(projectile, shotSpawn.position, Quaternion.identity);
 			//GetComponent<AudioSource>().Play ();
 		}
 	}

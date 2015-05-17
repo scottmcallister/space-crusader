@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour {
 	private GameObject initShot;
 	private Animator animator;
 	private GameController gameController;
+	private SpriteRenderer sr;
+	private Color defaultColor;
 
 
 	// Use this for initialization
@@ -50,6 +52,8 @@ public class PlayerController : MonoBehaviour {
 		// setup animations
 		animator = GetComponent<Animator> ();
 		animator.SetBool ("Spin", false);
+
+		sr = GetComponent<SpriteRenderer>();
 	}
 	
 	// Update is called once per frame
@@ -62,13 +66,17 @@ public class PlayerController : MonoBehaviour {
 			GetComponent<AudioSource>().Play ();
 		}
 
+		// Spin starts
 		if(Input.GetKey (KeyCode.Space) && Time.time > nextSpin){
 			nextSpin = Time.time + spinRate;
 			spinStop = Time.time + spinLength;
 			animator.SetBool("Spin", true);
+			StartCoroutine(FlashColor (Color.cyan, spinLength));
 			spinning = true;
 			// play audio sound
 		}
+
+		// Spin ends
 		else if(Time.time > spinStop && animator.GetBool("Spin")){
 			animator.SetBool ("Spin", false);
 			spinning = false;
@@ -98,18 +106,22 @@ public class PlayerController : MonoBehaviour {
 		shot = initShot;
 	}
 
-	public IEnumerator Shrink(){
-		// shrink
-
-		yield return new WaitForSeconds (5);
-		// grow back
-	}
-
 	public void TakeHit(){
 		health --;
 		gameController.UpdateHealth (health);
 		if (health == 0)
 			Die ();
+		else 
+			StartCoroutine (FlashColor (Color.red, 0.15f));
+	}
+
+	public IEnumerator FlashColor(Color c, float duration){
+		SpriteRenderer sr = GetComponent<SpriteRenderer> ();
+		Color original = sr.color;
+		sr.color = c;
+		yield return new WaitForSeconds (duration);
+		sr.color = original;
+
 	}
 
 	public void Heal(){

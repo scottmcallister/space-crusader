@@ -16,7 +16,6 @@ public class ShrinkController : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) {
 		if (other.tag == "Player") {
 			PlayerController controller = other.gameObject.GetComponent<PlayerController>();
-			controller.StartCoroutine(controller.Shrink());
 			Destroy (gameObject);
 		}
 	}

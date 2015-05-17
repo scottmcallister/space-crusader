@@ -28,7 +28,6 @@ public class DestroyByContact : MonoBehaviour {
 			if(controller.IsHurt ()){
 				gameController.KillEnemy();
 				if(gameController.enemyCount == 0){
-					// Spawn wave cleared, initialize power up
 					GetComponent<GhostController>().SpawnPowerUp();
 				}
 			}
@@ -39,10 +38,20 @@ public class DestroyByContact : MonoBehaviour {
 			}
 		}
 		if (tag == "Bee") {
-			Debug.Log ("Bee dies");
+			gameController.AddScore(scoreValue);
+			gameController.KillEnemy();
+			if(gameController.enemyCount == 0){
+				GetComponent<BeeMover>().SpawnPowerUp();
+			}
 			Instantiate(explosion, transform.position, transform.rotation);
 			//gameController.AddScore(scoreValue);
-			Destroy(other.gameObject);
+			if(other.tag == "Player"){
+				PlayerController pc = other.gameObject.GetComponent<PlayerController>();
+				pc.TakeHit();
+			}
+			else{
+				Destroy(other.gameObject);
+			}
 			Destroy (gameObject);
 			return;
 		}
