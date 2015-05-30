@@ -6,11 +6,13 @@ public class FlightPath : MonoBehaviour {
 	private string direction;
 	public float moveSpeed;
 	public Boundary boundary;
+	private Animator animator;
 
 	// Use this for initialization
 	void Start () {
 		boundary.yMax = transform.position.y + 2.0f;
 		direction = "Down";
+		animator = GetComponent<Animator> ();
 	}
 
 	void FixedUpdate(){
@@ -46,6 +48,8 @@ public class FlightPath : MonoBehaviour {
 	void SwitchDirections(){
 		if (direction == "Left") {
 			direction = "Right";
+			if(tag == "Ghost")
+				animator.SetBool("Left", false);
 		} 
 		else if (direction == "Down") {
 			Rigidbody2D body = GetComponent<Rigidbody2D>();
@@ -53,6 +57,8 @@ public class FlightPath : MonoBehaviour {
 		}
 		else{
 			direction = "Left";
+			if(tag == "Ghost")
+				animator.SetBool("Left", true);
 		}
 	}
 }

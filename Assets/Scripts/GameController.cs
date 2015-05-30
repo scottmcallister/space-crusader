@@ -5,9 +5,12 @@ public class GameController : MonoBehaviour {
 
 	public GameObject ghost;
 	public GameObject bee;
+	public GameObject asteroid;
+	public GameObject bug;
 	public Vector2 spawnValues;
 	public float spawnWait;
 	public float startWait;
+	public float waveWait;
 	public float slowmoDuration;
 	public int score;
 	public GUIText scoreText;
@@ -19,6 +22,8 @@ public class GameController : MonoBehaviour {
 	public float savedTimeScale;
 	public float slowmoTimeScale;
 	public int enemyCount;
+	public AudioClip pauseClip;
+	//public AudioClip[] lazerSounds;
 
 	private bool gameOver;
 	private bool restart;
@@ -61,8 +66,13 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds (startWait);
 		while (true) {
 			if(enemyCount == 0){
-				int random = Random.Range (1, 6); // 
-				switch(random){
+				/*if(score == 0){
+					//StartCoroutine(AsteroidWave());
+					StartCoroutine (BugWaveLeft ());
+				}
+				else{*/
+					int random = Random.Range (1, 6); // 
+					switch(random){
 					case 1:
 						StartCoroutine(GhostWave());
 						break;
@@ -75,10 +85,15 @@ public class GameController : MonoBehaviour {
 					case 4:
 						StartCoroutine(BeeWaveBoth());
 						break;
-					default:
-						StartCoroutine(GhostWave());
+					case 5:
+						StartCoroutine(BugWaveLeft());
 						break;
-				}
+					default:
+						StartCoroutine (BugWaveRight ());
+						break;
+					}
+				//}
+
 
 				//StartCoroutine (GhostWave ());
 				//StartCoroutine(BeeWaveBoth());
@@ -104,6 +119,16 @@ public class GameController : MonoBehaviour {
 			ghost.gameObject.GetComponent<FlightPath>().boundary.yMin = (i * 5.0f);
 			Instantiate (ghost, spawnPosition, spawnRotation);
 			enemyCount++;
+			yield return new WaitForSeconds (spawnWait);
+		}
+	}
+
+	public IEnumerator AsteroidWave(){
+		enemyCount = 10;
+		while (enemyCount > 0) {
+			// Get asteroid spawn position
+			float spawnPoint = Random.Range(-17.0f, 17.0f);
+			Instantiate(asteroid, new Vector2(spawnPoint, 30.0f), Quaternion.identity);
 			yield return new WaitForSeconds (spawnWait);
 		}
 	}
@@ -175,6 +200,39 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	// Spawn bugs from the right circling counter clockwise
+	public IEnumerator BugWaveRight (){
+		for (int i = 0; i < 10; i++) {
+			// Make a bug
+			BugMover mover = bug.GetComponent<BugMover>();
+			mover.leftspawn = false;
+			Vector2 spawnPosition = new Vector2(22, 20);
+			Instantiate (bug, spawnPosition, Quaternion.identity);
+			enemyCount++;
+
+			// Wait for next bug spawn
+			yield return new WaitForSeconds (0.3f);
+		}
+	}
+
+	// Spawn bugs from the right circling clockwise
+	public IEnumerator BugWaveLeft(){
+		for (int i = 0; i < 10; i++) {
+			// Make a bug
+			BugMover mover = bug.GetComponent<BugMover>();
+			mover.leftspawn = true;
+			mover.speed = 40;
+			mover.spinrate = -2;
+			mover.delay = 0.8f;
+			Vector2 spawnPosition = new Vector2(-22, 20);
+			Instantiate (bug, spawnPosition, Quaternion.identity);
+			enemyCount++;
+			
+			// Wait for next bug spawn
+			yield return new WaitForSeconds (0.3f);
+		}
+	}
+
 
 
 	// Coroutine that slows the game down
@@ -204,6 +262,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	void TogglePaused(){
+		AudioSource.PlayClipAtPoint (pauseClip, transform.position);
 		if (paused) {
 			// resume play
 			if(slowmo){
@@ -212,19 +271,17 @@ public class GameController : MonoBehaviour {
 			else{
 				Time.timeScale = savedTimeScale;
 			}
-			AudioListener.pause = false;
 			pausedText.text = "";
 			paused = false;
+			AudioSource.PlayClipAtPoint (pauseClip, transform.position);
 		}
 		else{
 			// pause game
 			savedTimeScale = Time.timeScale;
 			Time.timeScale = 0;
-			AudioListener.pause = true;
 			pausedText.text = "Paused";
 			paused = true;
 		}
-
 	}
 
 	public void GameOver(){

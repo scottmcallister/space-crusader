@@ -1,13 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BeeMover.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/LazerSound.cs">
     <Files>
-      <File FileName="Assets/Scripts/BeeMover.cs" Line="72" Column="93" />
-      <File FileName="Assets/Scripts/GhostController.cs" Line="40" Column="4" />
-      <File FileName="Assets/Scripts/DestroyByContact.cs" Line="59" Column="20" />
-      <File FileName="Assets/Scripts/GameController.cs" Line="76" Column="9" />
-      <File FileName="Assets/Scripts/MenuController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/PlayerController.cs" Line="42" Column="9" />
+      <File FileName="Assets/Scripts/GameController.cs" Line="71" Column="26" />
+      <File FileName="Assets/Scripts/BugMover.cs" Line="84" Column="3" />
+      <File FileName="Assets/Scripts/GhostController.cs" Line="69" Column="39" />
+      <File FileName="Assets/Scripts/DestroyByContact.cs" Line="43" Column="26" />
+      <File FileName="Assets/Scripts/BeeMover.cs" Line="105" Column="25" />
+      <File FileName="Assets/Scripts/LazerSound.cs" Line="17" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

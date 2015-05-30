@@ -16,12 +16,16 @@ public class PlayerController : MonoBehaviour {
 	public Sprite rightSprite;
 	public Sprite spinSprite;
 	public GameObject shot;
+	public GameObject explosion;
 	public Transform shotSpawn;
 	public float fireRate;
 	public float spinRate;
 	public float spinLength;
 	public bool spinning;
 	public int health;
+	public AudioClip takeDamage;
+	public AudioClip deflectDamage;
+	public AudioClip explosionClip;
 
 	private float nextFire;
 	private float nextSpin;
@@ -32,6 +36,7 @@ public class PlayerController : MonoBehaviour {
 	private GameController gameController;
 	private SpriteRenderer sr;
 	private Color defaultColor;
+	private AudioSource[] audioArr;
 
 
 	// Use this for initialization
@@ -54,16 +59,17 @@ public class PlayerController : MonoBehaviour {
 		animator.SetBool ("Spin", false);
 
 		sr = GetComponent<SpriteRenderer>();
+		audioArr = GetComponents<AudioSource> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
 		// Shoot
-		if (Time.time > nextFire) {
+		if (Time.time > nextFire && Input.GetKey(KeyCode.F)) {
 			nextFire = Time.time + fireRate;
 			Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
-			GetComponent<AudioSource>().Play ();
+			//audioArr[0].Play ();
 		}
 
 		// Spin starts
@@ -71,9 +77,10 @@ public class PlayerController : MonoBehaviour {
 			nextSpin = Time.time + spinRate;
 			spinStop = Time.time + spinLength;
 			animator.SetBool("Spin", true);
-			StartCoroutine(FlashColor (Color.cyan, spinLength));
+			//StartCoroutine(FlashColor (Color.cyan, spinLength));
 			spinning = true;
 			// play audio sound
+			audioArr[1].Play ();
 		}
 
 		// Spin ends
@@ -111,8 +118,10 @@ public class PlayerController : MonoBehaviour {
 		gameController.UpdateHealth (health);
 		if (health == 0)
 			Die ();
-		else 
+		else {
+			AudioSource.PlayClipAtPoint (takeDamage, transform.position);
 			StartCoroutine (FlashColor (Color.red, 0.15f));
+		}
 	}
 
 	public IEnumerator FlashColor(Color c, float duration){
@@ -130,9 +139,14 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void Die(){
+		Instantiate(explosion, transform.position, Quaternion.identity);
 		gameController.GameOver ();
 		Destroy (gameObject);
+		AudioSource.PlayClipAtPoint (explosionClip, transform.position);
 		return;
+	}
+	public void DeflectHit(){
+		AudioSource.PlayClipAtPoint (deflectDamage, transform.position);
 	}
 	
 }

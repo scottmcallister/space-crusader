@@ -13,6 +13,7 @@ public class GhostController : MonoBehaviour {
 	private float nextFire;
 	private GameObject GameController;
 	private bool hurt;
+	private Animator animator;
 
 	// Custom constructor for specific colors
 	public GhostController(int index){
@@ -32,6 +33,7 @@ public class GhostController : MonoBehaviour {
 		}
 		hurt = false;
 		projectile.GetComponent<Mover>().speed = -40.0f;
+		animator = GetComponent<Animator> ();
 	}
 
 	// Called every frame
@@ -54,6 +56,7 @@ public class GhostController : MonoBehaviour {
 
 	public void HurtGhost(){
 		hurt = true;
+		animator.SetBool("Hurt", true);
 		GetComponent<SpriteRenderer>().sprite = hurtImage;
 		fireRate = 0.75f;
 	}
@@ -63,7 +66,7 @@ public class GhostController : MonoBehaviour {
 	}
 
 	public void SpawnPowerUp(){
-		int randomIndex = Random.Range (0, 5);
+		int randomIndex = Random.Range (0, 4);
 		Instantiate(powerUps[randomIndex], shotSpawn.position, shotSpawn.rotation);
 	}
 }

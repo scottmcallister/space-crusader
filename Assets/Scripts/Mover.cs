@@ -4,14 +4,17 @@ using System.Collections;
 public class Mover : MonoBehaviour {
 
 	public float speed;
+	public Vector3 direction;
 
 	// Use this for initialization
 	void Start () {
-		GetComponent<Rigidbody2D>().velocity = transform.up * speed;
+		if (direction == Vector3.zero)
+			direction = transform.up;
+		GetComponent<Rigidbody2D>().velocity = direction * speed;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
 }

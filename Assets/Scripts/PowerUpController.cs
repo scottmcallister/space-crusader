@@ -5,6 +5,7 @@ public class PowerUpController : MonoBehaviour {
 
 	public float fireRate;
 	public GameObject shot;
+	public AudioClip clip;
 
 	// Use this for initialization
 	void Start () {
@@ -20,6 +21,7 @@ public class PowerUpController : MonoBehaviour {
 		if (other.tag == "Player") {
 			PlayerController controller = other.gameObject.GetComponent<PlayerController>();
 			controller.StartCoroutine(controller.PowerUp(this));
+			AudioSource.PlayClipAtPoint(clip, transform.position);
 			Destroy (gameObject);
 		}
 	}

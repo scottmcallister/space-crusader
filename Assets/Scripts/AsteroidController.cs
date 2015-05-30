@@ -5,8 +5,10 @@ public class AsteroidController : MonoBehaviour {
 
 	public Sprite skin1;
 	public Sprite skin2;
-	public Sprite skin3;
 	public float rotationSpeed;
+	public GameObject tinyAsteroid;
+	public Transform spawn1;
+	public Transform spawn2;
 
 	// Use this for initialization
 	void Start () {
@@ -17,9 +19,6 @@ public class AsteroidController : MonoBehaviour {
 				break;
 			case 2:
 				GetComponent<SpriteRenderer>().sprite = skin2;
-				break;
-			default:
-				GetComponent<SpriteRenderer>().sprite = skin3;
 				break;
 		}
 
@@ -33,4 +32,5 @@ public class AsteroidController : MonoBehaviour {
 	void RotateLeft(){
 		transform.Rotate (Vector3.forward * -90 * rotationSpeed);
 	}
+
 }

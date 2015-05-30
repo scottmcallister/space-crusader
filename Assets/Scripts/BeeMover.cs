@@ -117,7 +117,7 @@ public class BeeMover : MonoBehaviour {
 	}
 
 	public void SpawnPowerUp(){
-		int randomIndex = Random.Range (0, 5);
+		int randomIndex = Random.Range (0, 4);
 		Instantiate(powerUps[randomIndex], shotSpawn.position, Quaternion.identity);
 	}
 }
