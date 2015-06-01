@@ -68,7 +68,7 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds (startWait);
 		while (true) {
 			if(enemyCount == 0){
-					int random = Random.Range (1, 6); // 
+					int random = Random.Range (1, 7); // 
 					switch(random){
 					case 1:
 						StartCoroutine(GhostWave());
