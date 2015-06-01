@@ -68,7 +68,7 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds (startWait);
 		while (true) {
 			if(enemyCount == 0){
-					int random = Random.Range (1, 7); // 
+					int random = Random.Range (1, 7); 
 					switch(random){
 					case 1:
 						StartCoroutine(GhostWave());
@@ -89,11 +89,6 @@ public class GameController : MonoBehaviour {
 						StartCoroutine (BugWaveRight ());
 						break;
 					}
-				//}
-
-
-				//StartCoroutine (GhostWave ());
-				//StartCoroutine(BeeWaveBoth());
 
 
 			}
@@ -214,6 +209,9 @@ public class GameController : MonoBehaviour {
 			// Make a bug
 			BugMover mover = bug.GetComponent<BugMover>();
 			mover.leftspawn = false;
+			mover.speed = -40;
+			mover.spinrate = 2;
+			mover.delay = 2.35f;
 			Vector2 spawnPosition = new Vector2(22, 20);
 			Instantiate (bug, spawnPosition, Quaternion.identity);
 			enemyCount++;
