@@ -27,7 +27,7 @@ public class DestroyByContact : MonoBehaviour {
 			GhostController controller = gameObject.GetComponent<GhostController>();
 			if(controller.IsHurt ()){
 				ReduceEnemyCount();
-				if(gameController.enemyCount == 0){
+				if(gameController.enemyCount == 0 && gameController.Spawning() == false){
 					GetComponent<GhostController>().SpawnPowerUp();
 				}
 			}
@@ -39,14 +39,14 @@ public class DestroyByContact : MonoBehaviour {
 		}
 		if (tag == "Bug") {
 			ReduceEnemyCount();
-			if (gameController.enemyCount == 0) {
+			if (gameController.enemyCount == 0 && gameController.Spawning() == false) {
 				GetComponent<BugMover>().SpawnPowerUp();
 			}
 		}
 		if (tag == "Bee") {
 			gameController.AddScore(scoreValue);
 			ReduceEnemyCount();
-			if(gameController.enemyCount == 0){
+			if(gameController.enemyCount == 0 && gameController.Spawning() == false){
 				GetComponent<BeeMover>().SpawnPowerUp();
 			}
 			Instantiate(explosion, transform.position, transform.rotation);
@@ -108,6 +108,10 @@ public class DestroyByContact : MonoBehaviour {
 		Destroy(other.gameObject);
 		Instantiate(explosion, transform.position, transform.rotation);
 		Destroy (gameObject);
+	}
+
+	void GhostHit(){
+
 	}
 
 	void ReduceEnemyCount(){

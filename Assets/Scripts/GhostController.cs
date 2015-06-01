@@ -9,6 +9,7 @@ public class GhostController : MonoBehaviour {
 	public Transform shotSpawn;
 	public float fireRate;
 	public GameObject projectile;
+	public AudioClip wakaWaka;
 
 	private float nextFire;
 	private GameObject GameController;
@@ -59,6 +60,7 @@ public class GhostController : MonoBehaviour {
 		animator.SetBool("Hurt", true);
 		GetComponent<SpriteRenderer>().sprite = hurtImage;
 		fireRate = 0.75f;
+		AudioSource.PlayClipAtPoint (wakaWaka, transform.position, 0.5f);
 	}
 
 	public bool IsHurt(){

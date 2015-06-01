@@ -29,6 +29,7 @@ public class GameController : MonoBehaviour {
 	private bool restart;
 	private bool paused;
 	private bool slowmo;
+	private bool spawning;
 
 	// Use this for initialization
 	void Start () {
@@ -45,6 +46,7 @@ public class GameController : MonoBehaviour {
 		highScoreText.text = "High Score " + PlayerPrefs.GetInt ("highscore");
 		UpdateScore();
 		StartCoroutine (SpawnWaves());
+		spawning = false;
 	}
 	
 	// Update is called once per frame
@@ -66,11 +68,6 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds (startWait);
 		while (true) {
 			if(enemyCount == 0){
-				/*if(score == 0){
-					//StartCoroutine(AsteroidWave());
-					StartCoroutine (BugWaveLeft ());
-				}
-				else{*/
 					int random = Random.Range (1, 6); // 
 					switch(random){
 					case 1:
@@ -113,17 +110,20 @@ public class GameController : MonoBehaviour {
 	}
 
 	public IEnumerator GhostWave(){
+		spawning = true;
 		for(int i = 1; i < 6; i++){
+			enemyCount++;
 			Vector2 spawnPosition = new Vector2 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y);
 			Quaternion spawnRotation = Quaternion.identity;
 			ghost.gameObject.GetComponent<FlightPath>().boundary.yMin = (i * 5.0f);
 			Instantiate (ghost, spawnPosition, spawnRotation);
-			enemyCount++;
 			yield return new WaitForSeconds (spawnWait);
 		}
+		spawning = false;
 	}
 
 	public IEnumerator AsteroidWave(){
+		spawning = true;
 		enemyCount = 10;
 		while (enemyCount > 0) {
 			// Get asteroid spawn position
@@ -131,10 +131,13 @@ public class GameController : MonoBehaviour {
 			Instantiate(asteroid, new Vector2(spawnPoint, 30.0f), Quaternion.identity);
 			yield return new WaitForSeconds (spawnWait);
 		}
+		spawning = false;
 	}
 
 	public IEnumerator BeeWaveRight(){
+		spawning = true;
 		for (int i = 0; i < 14; i++) {
+			enemyCount++;
 			Vector2 spawnPosition = new Vector2(20.0f, -15.0f);
 			Quaternion spawnRotation = Quaternion.Euler (new Vector3(0.0f, 0.0f, 45f));
 
@@ -148,13 +151,15 @@ public class GameController : MonoBehaviour {
 				bee.gameObject.GetComponent<BeeMover>().yPos = 15;
 			}
 			Instantiate(bee, spawnPosition, spawnRotation);
-			enemyCount++;
 			yield return new WaitForSeconds (0.2f);
 		}
+		spawning = false;
 	}
 
 	public IEnumerator BeeWaveLeft(){
+		spawning = true;
 		for (int i = 0; i < 14; i++) {
+			enemyCount++;
 			Vector2 spawnPosition = new Vector2(-20.0f, -15.0f);
 			Quaternion spawnRotation = Quaternion.Euler (new Vector3(0.0f, 0.0f, -45.0f));
 			bee.gameObject.GetComponent<BeeMover>().rotationSpeed = 10.0f;
@@ -168,14 +173,16 @@ public class GameController : MonoBehaviour {
 				bee.gameObject.GetComponent<BeeMover>().yPos = 15;
 			}
 			Instantiate(bee, spawnPosition, spawnRotation);
-			enemyCount++;
 			yield return new WaitForSeconds (0.2f);
 		}
+		spawning = false;
 	}
 
 	public IEnumerator BeeWaveBoth (){
+		spawning = true;
 		for (int i = 0; i < 7; i++) {
 			// Spawn left bee
+			enemyCount++;
 			Vector2 spawnPosition = new Vector2(-20.0f, -15.0f);
 			Quaternion spawnRotation = Quaternion.Euler (new Vector3(0.0f, 0.0f, -45.0f));
 			bee.gameObject.GetComponent<BeeMover>().rotationSpeed = 10.0f;
@@ -183,9 +190,9 @@ public class GameController : MonoBehaviour {
 			bee.gameObject.GetComponent<BeeMover>().xPos = (i * 5.0f) - 15.0f;
 			bee.gameObject.GetComponent<BeeMover>().yPos = 15;
 			Instantiate(bee, spawnPosition, spawnRotation);
-			enemyCount++;
 
 			// Spawn right bee
+			enemyCount++;
 			spawnPosition = new Vector2(20.0f, -10.0f);
 			spawnRotation = Quaternion.Euler (new Vector3(0.0f, 0.0f, 45f));
 			bee.gameObject.GetComponent<BeeMover>().rotationSpeed = -10.0f;
@@ -193,15 +200,16 @@ public class GameController : MonoBehaviour {
 			bee.gameObject.GetComponent<BeeMover>().xPos = (i * 5.0f) - 15.0f;
 			bee.gameObject.GetComponent<BeeMover>().yPos = 20;
 			Instantiate(bee, spawnPosition, spawnRotation);
-			enemyCount++;
 
 			// Wait for next pair of bee spawns
 			yield return new WaitForSeconds (0.2f);
 		}
+		spawning = false;
 	}
 
 	// Spawn bugs from the right circling counter clockwise
 	public IEnumerator BugWaveRight (){
+		spawning = true;
 		for (int i = 0; i < 10; i++) {
 			// Make a bug
 			BugMover mover = bug.GetComponent<BugMover>();
@@ -213,10 +221,12 @@ public class GameController : MonoBehaviour {
 			// Wait for next bug spawn
 			yield return new WaitForSeconds (0.3f);
 		}
+		spawning = false;
 	}
 
 	// Spawn bugs from the right circling clockwise
 	public IEnumerator BugWaveLeft(){
+		spawning = true;
 		for (int i = 0; i < 10; i++) {
 			// Make a bug
 			BugMover mover = bug.GetComponent<BugMover>();
@@ -231,11 +241,12 @@ public class GameController : MonoBehaviour {
 			// Wait for next bug spawn
 			yield return new WaitForSeconds (0.3f);
 		}
+		spawning = false;
 	}
 
 
 
-	// Coroutine that slows the game down
+	// Coroutine that slows the game down (not used in final version of game)
 	public IEnumerator SlowDown(){
 		slowmo = true;
 		Time.timeScale = slowmoTimeScale;
@@ -294,5 +305,9 @@ public class GameController : MonoBehaviour {
 		int oldHighScore = PlayerPrefs.GetInt ("highscore");
 		if(newHighscore > oldHighScore)
 			PlayerPrefs.SetInt("highscore", newHighscore);
+	}
+
+	public bool Spawning(){
+		return spawning;
 	}
 }

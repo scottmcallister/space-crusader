@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour {
 	private SpriteRenderer sr;
 	private Color defaultColor;
 	private AudioSource[] audioArr;
+	private bool poweredUp = false;
 
 
 	// Use this for initialization
@@ -60,13 +61,14 @@ public class PlayerController : MonoBehaviour {
 
 		sr = GetComponent<SpriteRenderer>();
 		audioArr = GetComponents<AudioSource> ();
+		defaultColor = sr.color;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
 		// Shoot
-		if (Time.time > nextFire && Input.GetKey(KeyCode.F)) {
+		if (Time.time > nextFire && (Input.GetKey(KeyCode.F) || poweredUp)) {
 			nextFire = Time.time + fireRate;
 			Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
 			//audioArr[0].Play ();
@@ -105,12 +107,15 @@ public class PlayerController : MonoBehaviour {
 			-20.0f);
 	}
 
+	// Upgrade lazer
 	public IEnumerator PowerUp(PowerUpController powerUp){
+		poweredUp = true;
 		fireRate = powerUp.fireRate;
 		shot = powerUp.shot;
 		yield return new WaitForSeconds (5);	
 		fireRate = initFireRate;
 		shot = initShot;
+		poweredUp = false;
 	}
 
 	public void TakeHit(){
@@ -120,17 +125,14 @@ public class PlayerController : MonoBehaviour {
 			Die ();
 		else {
 			AudioSource.PlayClipAtPoint (takeDamage, transform.position);
-			StartCoroutine (FlashColor (Color.red, 0.15f));
+			StartCoroutine (FlashColor (Color.red, 0.10f));
 		}
 	}
 
 	public IEnumerator FlashColor(Color c, float duration){
-		SpriteRenderer sr = GetComponent<SpriteRenderer> ();
-		Color original = sr.color;
 		sr.color = c;
 		yield return new WaitForSeconds (duration);
-		sr.color = original;
-
+		sr.color = defaultColor;
 	}
 
 	public void Heal(){
@@ -146,6 +148,7 @@ public class PlayerController : MonoBehaviour {
 		return;
 	}
 	public void DeflectHit(){
+		StartCoroutine (FlashColor (Color.green, 0.10f));
 		AudioSource.PlayClipAtPoint (deflectDamage, transform.position);
 	}
 	
